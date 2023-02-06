@@ -1,9 +1,16 @@
-## gRPC
+# gRPC
 Service is defined using .proto \
 Client app directly invokes server method on a different machine.
 
+## Quick Start
+Generate java codes using protoc.
 
-# Proto
+```bash
+$ cd [project-root]/src/main/proto
+$ protoc --proto_path=. --java_out=../java *.proto
+```
+
+## Proto
 Platform neutral, Language neutral data type
 
 ```protobuf
