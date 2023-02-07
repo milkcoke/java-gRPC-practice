@@ -173,9 +173,65 @@ message User {
   Address address = 3;
   repeated Car car = 4;
 }
-
 ```
 
+### One of - interface
+We can use interface and concrete class in java on .proto using `oneof` keyword. \
+class created by protocol buffer has one's factory method. \
+Refer to [factory method pattern](https://milkcoke.github.io/docusaurus/docs/design-pattern/create-pattern/factory-method-pattern).
+
+
+```protobuf
+syntax = "proto3";
+
+// This is interface having two concrete class
+message Credentials {
+  oneof mode {
+    EmailCredentials emailMode = 1;
+    PhoneOtp phoneMode = 2;
+  }
+}
+
+message EmailCredentials {
+  string email = 1;
+  string password = 2;
+}
+
+message PhoneOtp {
+  int32 number = 1;
+  int32 code = 2;
+}
+```
+
+```java
+class CredentialsTest {
+
+    private Credentials credentials;
+    
+    private static void login(Credentials credentials) {
+
+        switch (credentials.getModeCase()) {
+            case EMAILMODE -> System.out.println(credentials.getEmailMode());
+            case PHONEMODE -> System.out.println(credentials.getPhoneMode());
+        }
+    }
+
+    @DisplayName("이메일 인증")
+    @Test
+    void testEmail() {
+        EmailCredentials emailCredentials = EmailCredentials.newBuilder()
+                .setEmail("falcon@tistory.com")
+                .setPassword("khazix123")
+                .build();
+
+        credentials = Credentials.newBuilder()
+                .setEmailMode(emailCredentials)
+                .build();
+
+        login(credentials);
+    }
+}
+```
 
 ### Naming convention
 In Protocol Buffers (`.proto` files), the naming convention for properties is snake_case
