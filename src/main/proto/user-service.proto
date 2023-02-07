@@ -2,6 +2,7 @@ syntax = "proto3";
 
 import "car.proto";
 import "address.proto";
+import "google/protobuf/wrappers.proto";
 
 option java_multiple_files = true;
 option java_package = "com.example.grpcpractice.proto.user";
@@ -9,8 +10,9 @@ option java_package = "com.example.grpcpractice.proto.user";
 message User {
   string name = 1;
   int32 age = 2;
-  Address address = 3;
-  repeated Car car = 4;
+  google.protobuf.StringValue register_day = 3;
+  Address address = 4;
+  repeated Car car = 5;
 }
 
 

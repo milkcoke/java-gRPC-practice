@@ -5,9 +5,11 @@ import com.example.grpcpractice.proto.car.BodyStyle;
 import com.example.grpcpractice.proto.car.Car;
 import com.example.grpcpractice.proto.car.Dealer;
 import com.example.grpcpractice.proto.user.*;
+import com.google.protobuf.StringValue;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDateTime;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.*;
@@ -78,5 +80,15 @@ class UserClientTest {
         assertThat(user.getAge()).isEqualTo(0); // default number value is zero
         assertThat(user.hasAddress()).isEqualTo(false);
 
+    }
+
+    @DisplayName("Test Wrapper class")
+    @Test
+    void testWrapper() {
+        User user = User.newBuilder()
+                .setRegisterDay(StringValue.newBuilder().setValue(LocalDateTime.now().toString()).build())
+                .build();
+
+        System.out.println(user.getRegisterDay());
     }
 }
