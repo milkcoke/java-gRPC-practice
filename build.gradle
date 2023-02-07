@@ -27,6 +27,7 @@ dependencies {
 
 	implementation 'io.grpc:protoc-gen-grpc-java:1.52.1'
 	implementation 'io.grpc:grpc-protobuf:1.52.1'
+	implementation 'io.grpc:grpc-netty:1.52.1'
 	implementation 'com.google.protobuf:protobuf-java:3.21.12'
 	implementation 'com.fasterxml.jackson.core:jackson-core:2.14.2'
 	implementation 'com.fasterxml.jackson.core:jackson-databind:2.14.2'
