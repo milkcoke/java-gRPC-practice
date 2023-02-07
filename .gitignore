@@ -35,3 +35,6 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### Java files created by .proto ###
+**/src/main/java/**/proto/
