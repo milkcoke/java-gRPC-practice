@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "com.example.grpcpractice.proto.television";
+
+// v1 API
+//message Television {
+//  string brand = 1;
+//  int32 year = 2;
+//}
+
+
+// v2
+//message Television {
+//  string brand = 1;
+//  int32 model_number = 2;
+//  ResolutionLevel resolution = 3;
+//}
+
+enum ResolutionLevel {
+  HD = 0;
+  FHD = 1;
+  UHD = 2;
+}
+
+message Television {
+  string brand = 1;
+  reserved 2;
+  reserved "year", "model";
+  ResolutionLevel resolution = 3;
+  int64 price = 4;
+}
