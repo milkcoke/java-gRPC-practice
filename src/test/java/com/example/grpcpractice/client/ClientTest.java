@@ -1,4 +1,4 @@
-package com.example.grpcpractice.server;
+package com.example.grpcpractice.client;
 
 import com.example.grpcpractice.proto.bank.Balance;
 import org.junit.jupiter.api.DisplayName;

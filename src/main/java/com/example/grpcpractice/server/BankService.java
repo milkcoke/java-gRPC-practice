@@ -5,9 +5,9 @@ import com.example.grpcpractice.proto.bank.BalanceCheckRequest;
 import com.example.grpcpractice.proto.bank.BankServiceGrpc;
 import io.grpc.stub.StreamObserver;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+import net.devh.boot.grpc.server.service.GrpcService;
 
-@Service
+@GrpcService()
 @RequiredArgsConstructor
 public class BankService extends BankServiceGrpc.BankServiceImplBase {
     private final BankRepository bankRepository;
