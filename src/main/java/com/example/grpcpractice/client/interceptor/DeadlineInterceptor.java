@@ -1,4 +1,4 @@
-package com.example.grpcpractice.client.deadline;
+package com.example.grpcpractice.client.interceptor;
 
 import io.grpc.*;
 
