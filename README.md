@@ -334,9 +334,3 @@ when to use? Client and server need coordinate and work together
 
 ## Recommend project structure
 > Separate client with stub vs server with interface.
-
-
-## 좋은점
-아 VO 랑 DTO 정의 안해도 gRPC 어차피 .proto 에 저장해둬서 개 편하게 정의하는구나
-serialize & deserialize 만 되며 상관없겠다.
-
