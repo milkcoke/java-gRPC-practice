@@ -1,16 +1,19 @@
-package com.example.grpcpractice.server;
+package com.example.grpcpractice.server.controller;
 
 import com.example.grpcpractice.proto.bank.Balance;
 import com.example.grpcpractice.proto.bank.BalanceCheckRequest;
 import com.example.grpcpractice.proto.bank.BankServiceGrpc;
+import com.example.grpcpractice.server.dto.BalanceDTO;
+import com.example.grpcpractice.server.service.BankService;
+import com.example.grpcpractice.server.vo.BalanceVO;
 import io.grpc.stub.StreamObserver;
 import lombok.RequiredArgsConstructor;
 import net.devh.boot.grpc.server.service.GrpcService;
 
 @GrpcService()
 @RequiredArgsConstructor
-public class BankService extends BankServiceGrpc.BankServiceImplBase {
-    private final BankRepository bankRepository;
+public class BankController extends BankServiceGrpc.BankServiceImplBase {
+    private final BankService bankService;
     // return type is void
     // since there's stream observer
 
@@ -21,7 +24,8 @@ public class BankService extends BankServiceGrpc.BankServiceImplBase {
 
         int reqAccountId = request.getAccountNumber();
 
-        int amount = bankRepository.getBalanceByAccountId(reqAccountId);
+        BalanceDTO balanceDTO = this.bankService.readBalance(new BalanceVO(reqAccountId));
+        int amount = balanceDTO.amount();
 
         Balance balance = Balance.newBuilder()
                         .setAmount(amount)

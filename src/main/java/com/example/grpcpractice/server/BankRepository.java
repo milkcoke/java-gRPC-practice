@@ -23,7 +23,7 @@ public class BankRepository {
                     Function.identity(),
                     v -> v * 10_000));
 
-    public int getBalanceByAccountId(int accountId) {
+    public int findBalanceById(int accountId) {
         return accountBook.get(accountId);
     }
 
