@@ -1,4 +1,4 @@
-package com.example.grpcpractice.client.deadline;
+package com.example.grpcpractice.client.interceptor;
 
 import com.example.grpcpractice.proto.bank.Balance;
 import com.example.grpcpractice.proto.bank.BalanceCheckRequest;

@@ -31,7 +31,9 @@ class MetadataClientTest {
                 .setAccountNumber(2)
                 .build();
 
-        Balance balance = this.blockingStub.getBalance(balanceCheckRequest);
+        Balance balance = this.blockingStub
+                .withCallCredentials(new UserSessionToken("bank-user-secret"))
+                .getBalance(balanceCheckRequest);
 
         assertThat(balance.getAmount()).isEqualTo(2 * 10_000);
     }
@@ -53,6 +55,49 @@ class MetadataClientTest {
                 .build();
 
         assertThrows(StatusRuntimeException.class, ()-> this.blockingStub.getBalance(balanceCheckRequest));
+    }
+
+
+    @DisplayName("User 토큰 검증 실패")
+    @Test
+    void invalidUserToken() {
+
+        ManagedChannel managedChannel = ManagedChannelBuilder.forAddress("localhost", 6443)
+                .intercept(MetadataUtils.newAttachHeadersInterceptor(ClientHeaders.getClientToken()))
+                .usePlaintext()
+                .build();
+
+        this.blockingStub = BankServiceGrpc.newBlockingStub(managedChannel);
+
+
+        BalanceCheckRequest balanceCheckRequest = BalanceCheckRequest.newBuilder()
+                .setAccountNumber(3)
+                .build();
+
+
+        assertThrows(StatusRuntimeException.class, ()->this.blockingStub.withCallCredentials(new UserSessionToken("user-secret")).getBalance(balanceCheckRequest));    }
+
+
+    @DisplayName("User 토큰 검증 성공")
+    @Test
+    void validUserToken() {
+
+        ManagedChannel managedChannel = ManagedChannelBuilder.forAddress("localhost", 6443)
+                .intercept(MetadataUtils.newAttachHeadersInterceptor(ClientHeaders.getClientToken()))
+                .usePlaintext()
+                .build();
+
+        this.blockingStub = BankServiceGrpc.newBlockingStub(managedChannel);
+
+
+        BalanceCheckRequest balanceCheckRequest = BalanceCheckRequest.newBuilder()
+                .setAccountNumber(3)
+                .build();
+
+
+        Balance balance = this.blockingStub
+                .withCallCredentials(new UserSessionToken("bank-user-secret"))
+                .getBalance(balanceCheckRequest);
     }
 
 }
