@@ -383,8 +383,10 @@ void getBalanceTestWithDeadLine() {
 ## Interceptor
 Handle cross-cutting concerns
 
+Interceptor intercepts client request
+
 ### When to use?
 - Logging
-- Monittoring
-- Rate Limitting
+- Monitoring
+- Rate Limiting
 - Authentication
