@@ -1,6 +1,7 @@
 package com.example.grpcpractice.server;
 
 import com.example.grpcpractice.server.controller.BankController;
+import com.example.grpcpractice.server.interceptor.AuthInterceptor;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
 import jakarta.annotation.PostConstruct;
@@ -22,6 +23,7 @@ public class GrpcServer {
     @PostConstruct
     public void start() throws IOException, InterruptedException {
         Server server = ServerBuilder.forPort(6443)
+                .intercept(new AuthInterceptor())
                 .addService(bankService)
                 .build();
 
