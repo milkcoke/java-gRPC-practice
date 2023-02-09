@@ -390,3 +390,74 @@ Interceptor intercepts client request
 - Monitoring
 - Rate Limiting
 - Authentication
+
+### How to use?
+Define class implementing `ClientInterceptor` or `ServerInterceptor` and register it each side.
+
+
+#### DeadlineInterceptor.java
+```java
+public class DeadlineInterceptor implements ClientInterceptor {
+    @Override
+    public <ReqT, RespT> ClientCall<ReqT, RespT> interceptCall(MethodDescriptor<ReqT, RespT> method, CallOptions callOptions, Channel next) {
+        // if custom deadline is set, pass it.
+        if (callOptions.getDeadline() != null) return next.newCall(method, callOptions);
+
+        return next.newCall(method, callOptions.withDeadline(Deadline.after(2, TimeUnit.SECONDS)));
+    }
+}
+```
+
+
+### Context
+You can use Context for handling in interceptor or transferring to Service
+It's safe to use the Context. Which has thread local context current RPC can only get data.
+
+#### Role of Context
+In gRPC, the context plays a critical role in providing metadata, cancellation signals, and deadlines for a gRPC call.
+
+- Metadata \
+gRPC allows for sending metadata as key-value pairs with each request and response, which can be used for various purposes such as authentication, logging, and tracing.
+- Cancellation signals \
+The context provides a mechanism for clients to signal to the server that they no longer wish to receive a response to the gRPC call. The server can then cancel the processing of the request and release resources.
+- Deadlines \
+gRPC allows clients to specify a deadline for a call, after which the call will fail if it has not completed. The context provides a mechanism for clients to check the deadline and to cancel the call if necessary.
+
+> In interceptor, Context is not used explicitly. However, it's used implicitly to carry the call-specific information, including deadline and metadata between the client and server. 
+
+#### RequestInterceptor.java
+```java
+@Slf4j
+public class RequestInterceptor implements ServerInterceptor {
+    @Override
+    public <ReqT, RespT> ServerCall.Listener<ReqT> interceptCall(ServerCall<ReqT, RespT> call, Metadata headers, ServerCallHandler<ReqT, RespT> next) {
+        String requestId = headers.get(Metadata.Key.of("request_id", Metadata.ASCII_STRING_MARSHALLER));
+
+        if (Objects.isNull(requestId)) {
+            Status invalidStatus =  Status.UNAUTHENTICATED.withDescription("Should input request_id");
+            call.close(invalidStatus, headers);
+        }
+
+        // ThreadLocal current thread only the information
+        // it's safe to use
+        Context context = Context.current().withValue(
+                ServerHeaders.CTX_REQUEST_ID,
+                requestId
+        );
+
+        return Contexts.interceptCall(context, call, headers, next);
+//        return next.startCall(call, headers);
+    }
+}
+```
+
+> ⚠️ gRPC server sees the last service definition, so last intercept is called first.
+```java
+Server server = ServerBuilder.forPort(6443)
+        // ⚠️ interceptors are executed in reverse order
+        .intercept(new AuthInterceptor())
+        .intercept(new RequestInterceptor())
+        .addService(bankService)
+        .build();
+```
+
