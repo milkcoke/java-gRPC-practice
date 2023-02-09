@@ -1,5 +1,6 @@
 package com.example.grpcpractice.server;
 
+import com.example.grpcpractice.server.controller.BankController;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
 import jakarta.annotation.PostConstruct;
@@ -12,7 +13,7 @@ import java.io.IOException;
 @SpringBootApplication
 @RequiredArgsConstructor
 public class GrpcServer {
-    private final BankService bankService;
+    private final BankController bankService;
 
     public static void main(String[] args){
         SpringApplication.run(GrpcServer.class, args);
