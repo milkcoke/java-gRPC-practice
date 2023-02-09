@@ -1,6 +1,6 @@
 package com.example.grpcpractice.server.command;
 
-import com.example.grpcpractice.server.BankRepository;
+import com.example.grpcpractice.server.repository.BankRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

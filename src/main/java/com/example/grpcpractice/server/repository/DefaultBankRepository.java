@@ -1,4 +1,4 @@
-package com.example.grpcpractice.server;
+package com.example.grpcpractice.server.repository;
 
 import org.springframework.stereotype.Repository;
 
@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @Repository
-public class BankRepository {
+public class DefaultBankRepository implements BankRepository {
 
     /*
      * 1 : 10_000,
