@@ -334,3 +334,57 @@ when to use? Client and server need coordinate and work together
 
 ## Recommend project structure
 > Separate client with stub vs server with interface.
+
+
+## Deadline
+Timeout for gRPC to complete.
+You can test this feature using
+
+1. Insert method `Uninterruptibles.sleepUninterruptibly()` on server side
+2. Insert method `withDeadline(Deadline.after(2, TimeUnit.SECONDS))` on client side
+
+I'll suggest example as shown below.
+
+### BankServiceProxy.java
+```java
+@Service
+@RequiredArgsConstructor
+public class DefaultBankServiceProxy implements BankService {
+    /** Test 3 wait seconds
+    */
+    @Override
+    public BalanceDTO readBalance(BalanceVO balanceVO) {
+        // ..
+        Uninterruptibles.sleepUninterruptibly(3, TimeUnit.SECONDS);
+
+        return new BalanceDTO(balance);
+    }
+}
+```
+
+```java
+@DisplayName("Deadline test 2 seconds but 3 sec blocking")
+@Test
+void getBalanceTestWithDeadLine() {
+    BalanceCheckRequest balanceCheckRequest = BalanceCheckRequest.newBuilder()
+            .setAccountNumber(5)
+            .build();
+
+
+    assertThrows(StatusRuntimeException.class, ()->{
+        Balance balance = this.bankServiceBlockingStub
+                .withDeadline(Deadline.after(2, TimeUnit.SECONDS)) // 2 second deadline.
+                .getBalance(balanceCheckRequest);
+        System.out.println(balance);
+    });
+```
+
+
+## Interceptor
+Handle cross-cutting concerns
+
+### When to use?
+- Logging
+- Monittoring
+- Rate Limitting
+- Authentication
