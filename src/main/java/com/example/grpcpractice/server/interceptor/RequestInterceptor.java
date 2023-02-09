@@ -7,11 +7,14 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.Objects;
 
 @Slf4j
+// This is for validation metadata from client.
 public class RequestInterceptor implements ServerInterceptor {
     @Override
     public <ReqT, RespT> ServerCall.Listener<ReqT> interceptCall(ServerCall<ReqT, RespT> call, Metadata headers, ServerCallHandler<ReqT, RespT> next) {
-        String requestId = headers.get(Metadata.Key.of("request_id", Metadata.ASCII_STRING_MARSHALLER));
+        log.info("[Request interceptor] on server side");
+        String requestId = headers.get(ServerHeaders.REQUEST_ID);
 
+        // Validation
         if (Objects.isNull(requestId)) {
             Status invalidStatus =  Status.UNAUTHENTICATED.withDescription("Should input request_id");
             call.close(invalidStatus, headers);
@@ -24,7 +27,7 @@ public class RequestInterceptor implements ServerInterceptor {
                 requestId
         );
 
-        return Contexts.interceptCall(context, call, headers, next);
 //        return next.startCall(call, headers);
+        return Contexts.interceptCall(context, call, headers, next);
     }
 }

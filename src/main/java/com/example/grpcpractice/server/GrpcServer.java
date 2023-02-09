@@ -3,6 +3,7 @@ package com.example.grpcpractice.server;
 import com.example.grpcpractice.server.controller.BankController;
 import com.example.grpcpractice.server.interceptor.AuthInterceptor;
 import com.example.grpcpractice.server.interceptor.RequestInterceptor;
+import com.example.grpcpractice.server.interceptor.ResponseInterceptor;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
 import jakarta.annotation.PostConstruct;
@@ -25,6 +26,7 @@ public class GrpcServer {
     public void start() throws IOException, InterruptedException {
         Server server = ServerBuilder.forPort(6443)
                 // interceptors are executed in reverse order
+                .intercept(new ResponseInterceptor())
                 .intercept(new AuthInterceptor())
                 .intercept(new RequestInterceptor())
                 .addService(bankService)
