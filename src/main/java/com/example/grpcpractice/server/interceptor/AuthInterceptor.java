@@ -13,7 +13,7 @@ public class AuthInterceptor implements ServerInterceptor {
 
     @Override
     public <ReqT, RespT> ServerCall.Listener<ReqT> interceptCall(ServerCall<ReqT, RespT> call, Metadata headers, ServerCallHandler<ReqT, RespT> next) {
-        String clientToken = headers.get(ServerHeaders.TOKEN);
+        String clientToken = headers.get(ServerHeaders.CLIENT_TOKEN);
         String userToken = headers.get(ServerHeaders.USER_TOKEN);
 
         if (!this.isValidClient(clientToken)) {
