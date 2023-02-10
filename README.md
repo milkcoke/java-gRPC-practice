@@ -463,6 +463,21 @@ Server server = ServerBuilder.forPort(6443)
 
 ## Error Handling via Metadata
 
+### Don't make all custom error
+Standard exception (e.g. IllegalArgumentException) is apt to many developers. \
+If standard one is enough to delivery meaning to client. Don't make custom error exception classes.
+CustomError can be managed by GlobalExceptionHandler(*ControllerAdvice) and can reduce stacktrace memory cost by overriding `fillInStackTrace()` as shown below
+```java
+class CustomError extends RuntimeException {
+    @Override
+    public synchronized Throwable fillInStackTrace() {
+        // don't require calling super.fillInStackTrace() recursively.
+        return this;
+    }
+}
+```
+Refer to this [blog post](https://tecoble.techcourse.co.kr/post/2020-08-17-custom-exception/)
+
 ### What's difference Metadata and Trailers ?
 Both are used to send additional information. However, there's some difference. \
 Metadata is available to both the client and server at all times during the lifecycle of the call. \
