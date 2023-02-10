@@ -13,6 +13,7 @@ public class RequestInterceptor implements ServerInterceptor {
     public <ReqT, RespT> ServerCall.Listener<ReqT> interceptCall(ServerCall<ReqT, RespT> call, Metadata headers, ServerCallHandler<ReqT, RespT> next) {
         log.info("[Request interceptor] on server side");
         String requestId = headers.get(ServerHeaders.REQUEST_ID);
+        String clientToken = headers.get(ServerHeaders.CLIENT_TOKEN);
 
         // Validation
         if (Objects.isNull(requestId)) {
@@ -22,9 +23,14 @@ public class RequestInterceptor implements ServerInterceptor {
 
         // ThreadLocal current thread only the information
         // it's safe to use
-        Context context = Context.current().withValue(
-                ServerHeaders.CTX_REQUEST_ID,
-                requestId
+//        Context context = Context.current().withValue(
+//                ServerHeaders.CTX_REQUEST_ID,
+//                requestId
+//        );
+
+        Context context = Context.current().withValues(
+                ServerHeaders.CTX_REQUEST_ID, requestId,
+                ServerHeaders.CTX_CLIENT_TOKEN, clientToken
         );
 
 //        return next.startCall(call, headers);
