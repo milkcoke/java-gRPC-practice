@@ -1,16 +1,13 @@
 package com.example.grpcpractice.server.controller;
 
 import com.example.grpcpractice.proto.bank.*;
-import com.example.grpcpractice.proto.error.CustomError;
-import com.example.grpcpractice.proto.error.ErrorMessage;
 import com.example.grpcpractice.server.dto.BalanceDTO;
+import com.example.grpcpractice.server.exception.CustomErrorCode;
+import com.example.grpcpractice.server.exception.CustomException;
 import com.example.grpcpractice.server.service.BankService;
 import com.example.grpcpractice.server.vo.AddBalanceVO;
 import com.example.grpcpractice.server.vo.DeductBalanceVO;
 import com.example.grpcpractice.server.vo.GetBalanceVO;
-import io.grpc.Metadata;
-import io.grpc.Status;
-import io.grpc.protobuf.ProtoUtils;
 import io.grpc.stub.StreamObserver;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -67,19 +64,19 @@ public class BankController extends BankServiceGrpc.BankServiceImplBase {
         try {
             balanceDTO = this.bankService.withdraw(new DeductBalanceVO(reqAccountId, reqAmount));
         } catch (Exception e) {
-            log.error(e.getMessage());
-            Metadata metadata = new Metadata();
-            Metadata.Key<CustomError> customErrorKey = ProtoUtils.keyForProto(CustomError.getDefaultInstance());
-            CustomError customError = CustomError.newBuilder()
-                    .setErrorMessage(ErrorMessage.INSUFFICIENT_BALANCE)
-                    .setMessage(e.getMessage())
-                    .setCode(4_000_000)
-                    .build();
-
-            metadata.put(customErrorKey, customError);
-
-            responseObserver.onError(Status.FAILED_PRECONDITION.asRuntimeException(metadata));
-            return;
+//            log.error(e.getMessage());
+//            Metadata metadata = new Metadata();
+//            Metadata.Key<CustomError> customErrorKey = ProtoUtils.keyForProto(CustomError.getDefaultInstance());
+//            CustomError customError = CustomError.newBuilder()
+//                    .setErrorMessage(ErrorMessage.INSUFFICIENT_BALANCE)
+//                    .setMessage(e.getMessage())
+//                    .setCode(4_000_000)
+//                    .build();
+//
+//            metadata.put(customErrorKey, customError);
+//
+//            responseObserver.onError(Status.FAILED_PRECONDITION.asRuntimeException(metadata));
+            throw new CustomException(CustomErrorCode.NOT_ENOUGH_BALANCE);
         }
 
         int amount = balanceDTO.amount();
