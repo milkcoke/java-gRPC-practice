@@ -27,11 +27,11 @@ public class DefaultBankRepository implements BankRepository {
         return accountBook.get(accountId);
     }
 
-    public Integer deposit(int accountId, int amount) {
+    public Integer addBalanceById(int accountId, int amount) {
         return accountBook.computeIfPresent(accountId, (k, v) -> v + amount);
     }
 
-    public Integer withdraw(int accountId, int amount) {
+    public Integer deductBalanceById(int accountId, int amount) {
         return accountBook.computeIfPresent(accountId, (k, v) -> v - amount);
     }
 }
