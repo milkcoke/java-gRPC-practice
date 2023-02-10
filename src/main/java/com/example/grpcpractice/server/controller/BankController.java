@@ -1,11 +1,11 @@
 package com.example.grpcpractice.server.controller;
 
-import com.example.grpcpractice.proto.bank.Balance;
-import com.example.grpcpractice.proto.bank.BalanceCheckRequest;
-import com.example.grpcpractice.proto.bank.BankServiceGrpc;
+import com.example.grpcpractice.proto.bank.*;
 import com.example.grpcpractice.server.dto.BalanceDTO;
 import com.example.grpcpractice.server.service.BankService;
-import com.example.grpcpractice.server.vo.BalanceVO;
+import com.example.grpcpractice.server.vo.AddBalanceVO;
+import com.example.grpcpractice.server.vo.DeductBalanceVO;
+import com.example.grpcpractice.server.vo.GetBalanceVO;
 import io.grpc.stub.StreamObserver;
 import lombok.RequiredArgsConstructor;
 import net.devh.boot.grpc.server.service.GrpcService;
@@ -24,12 +24,44 @@ public class BankController extends BankServiceGrpc.BankServiceImplBase {
 
         int reqAccountId = request.getAccountNumber();
 
-        BalanceDTO balanceDTO = this.bankService.readBalance(new BalanceVO(reqAccountId));
+        BalanceDTO balanceDTO = this.bankService.readBalance(new GetBalanceVO(reqAccountId));
         int amount = balanceDTO.amount();
 
         Balance balance = Balance.newBuilder()
                         .setAmount(amount)
                         .build();
+
+        responseObserver.onNext(balance);
+        responseObserver.onCompleted();
+    }
+
+    @Override
+    public void addBalance(BalanceAddRequest request, StreamObserver<Balance> responseObserver) {
+        int reqAccountId = request.getAccountNumber();
+        int reqAmount = request.getAmount();
+
+        BalanceDTO balanceDTO = this.bankService.deposit(new AddBalanceVO(reqAccountId, reqAmount));
+        int amount = balanceDTO.amount();
+
+        Balance balance = Balance.newBuilder()
+                .setAmount(amount)
+                .build();
+
+        responseObserver.onNext(balance);
+        responseObserver.onCompleted();
+    }
+
+    @Override
+    public void deductBalance(BalanceDeductRequest request, StreamObserver<Balance> responseObserver) {
+        int reqAccountId = request.getAccountNumber();
+        int reqAmount = request.getAmount();
+
+        BalanceDTO balanceDTO = this.bankService.withdraw(new DeductBalanceVO(reqAccountId, reqAmount));
+        int amount = balanceDTO.amount();
+
+        Balance balance = Balance.newBuilder()
+                .setAmount(amount)
+                .build();
 
         responseObserver.onNext(balance);
         responseObserver.onCompleted();
