@@ -28,10 +28,19 @@ public class DefaultBankRepository implements BankRepository {
     }
 
     public Integer addBalanceById(int accountId, int amount) {
-        return accountBook.computeIfPresent(accountId, (k, v) -> v + amount);
+        int remainBalance = accountBook.get(accountId);
+        accountBook.put(accountId, remainBalance + amount);
+        return accountBook.get(accountId);
     }
 
     public Integer deductBalanceById(int accountId, int amount) {
-        return accountBook.computeIfPresent(accountId, (k, v) -> v - amount);
+        int remainBalance = accountBook.get(accountId);
+
+        if (remainBalance < amount) {
+            throw new IllegalStateException("잔액이 부족해요");
+        }
+
+        accountBook.put(accountId, remainBalance - amount);
+        return accountBook.get(accountId);
     }
 }
