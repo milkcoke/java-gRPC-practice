@@ -1,6 +1,6 @@
 grpc:
   server:
     port: 6443
-  client:
-    bank-service: static://localhost:6443
-    negotiationType: plaintext
+#  client:
+#    bank-service: static://localhost:6443
+#    negotiationType: plaintext

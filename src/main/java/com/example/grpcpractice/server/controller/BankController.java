@@ -64,18 +64,6 @@ public class BankController extends BankServiceGrpc.BankServiceImplBase {
         try {
             balanceDTO = this.bankService.withdraw(new DeductBalanceVO(reqAccountId, reqAmount));
         } catch (Exception e) {
-//            log.error(e.getMessage());
-//            Metadata metadata = new Metadata();
-//            Metadata.Key<CustomError> customErrorKey = ProtoUtils.keyForProto(CustomError.getDefaultInstance());
-//            CustomError customError = CustomError.newBuilder()
-//                    .setErrorMessage(ErrorMessage.INSUFFICIENT_BALANCE)
-//                    .setMessage(e.getMessage())
-//                    .setCode(4_000_000)
-//                    .build();
-//
-//            metadata.put(customErrorKey, customError);
-//
-//            responseObserver.onError(Status.FAILED_PRECONDITION.asRuntimeException(metadata));
             throw new CustomException(CustomErrorCode.NOT_ENOUGH_BALANCE);
         }
 
