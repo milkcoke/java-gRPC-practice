@@ -7,6 +7,16 @@ message BalanceCheckRequest {
   int32 account_number = 1;
 }
 
+message BalanceAddRequest {
+  int32 account_number = 1;
+  int32 amount = 2;
+}
+
+message BalanceDeductRequest {
+  int32 account_number = 1;
+  int32 amount = 2;
+}
+
 // USD
 message Balance {
   int32 amount = 1;
@@ -14,4 +24,7 @@ message Balance {
 
 service BankService {
   rpc getBalance(BalanceCheckRequest) returns (Balance);
+  rpc addBalance(BalanceAddRequest) returns (Balance);
+  rpc deductBalance(BalanceDeductRequest) returns (Balance);
 }
+

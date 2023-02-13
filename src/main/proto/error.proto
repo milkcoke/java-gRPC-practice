@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "com.example.grpcpractice.proto.error";
+
+// Custom Error message
+enum ErrorMessage {
+  NOT_EXISTS_ACCOUNT = 0;
+  INSUFFICIENT_BALANCE = 1;
+}
+
+
+message CustomError {
+  ErrorMessage error_message = 1;
+//  reserved 2;
+//  reserved "message";
+  string message = 2;
+  int32 code = 3;
+}
