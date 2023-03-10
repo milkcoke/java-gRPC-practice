@@ -479,7 +479,8 @@ class CustomError extends RuntimeException {
 Refer to this [blog post](https://tecoble.techcourse.co.kr/post/2020-08-17-custom-exception/)
 
 ### What's difference Metadata and Trailers ?
-Both are used to send additional information. However, there's some difference. \
+Both are used to send additional information. In terms of HTTP/2 both are headers. \
+However, there's some difference. \
 Metadata is available to both the client and server at all times during the lifecycle of the call. \
-On the other hand, trailers can be sent after the request has been processed and response has been sent. \
-Trailers is useful when to send response size.
+On the other hand, trailers can be sent only from server to client after the request has been processed and response has been sent. \
+Trailers is useful when to send response size, checksum, error message, status code etc..
