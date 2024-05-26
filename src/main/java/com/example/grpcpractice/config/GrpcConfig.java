@@ -1,11 +1,13 @@
 package com.example.grpcpractice.config;
 
 import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 // This is for supporting springboot 3.x since it doesn't support spring.factories
 // Refer to : https://github.com/yidongnan/grpc-spring-boot-starter/pull/775
 @Configuration
+@ComponentScan
 @ImportAutoConfiguration({
         // grpc-client-spring-boot-autoconfiguration
         net.devh.boot.grpc.client.autoconfigure.GrpcClientAutoConfiguration.class,
@@ -31,4 +33,5 @@ import org.springframework.context.annotation.Configuration;
         net.devh.boot.grpc.server.autoconfigure.GrpcServerSecurityAutoConfiguration.class,
         net.devh.boot.grpc.server.autoconfigure.GrpcServerTraceAutoConfiguration.class,
 })
-public class GrpcConfig { }
+public class GrpcConfig {
+}
